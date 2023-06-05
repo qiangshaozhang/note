@@ -1,0 +1,29 @@
+vim /etc/proxychains4.conf
+
+注释掉strict_chain
+将dynamic_chain注释符删掉
+
+![image-20230605161941828](kali走代理md.assets/image-20230605161941828.png)
+
+注释掉 socks 127.0.0.1 9050
+
+添加自己主机ip加端口号
+
+![image-20230605162011243](kali走代理md.assets/image-20230605162011243.png)
+
+ 使用代理打开google
+
+proxychains4 google-chrome --no-sandbox   //打不开谷歌浏览器
+
+下载谷歌代理扩展包进入谷歌浏览器进行安装
+
+wget https://github.com/FelisCatus/SwitchyOmega/releases/download/v2.5.20/SwitchyOmega_Chromium.crx
+
+修改后缀名为zip
+
+解压后拖入谷歌
+
+```bash
+unzip SwitchyOmega_Chromium.zip -d SwitchyOmega_Chromium
+```
+
