@@ -69,10 +69,7 @@ gobuster dns -d thetoppers.htb -t 10  -w /root/文档/2m-subdomains.txt
 
 awscli
 
-```
 
-
-```
 
 任务7
 
