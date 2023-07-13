@@ -27,3 +27,11 @@ wget https://github.com/FelisCatus/SwitchyOmega/releases/download/v2.5.20/Switch
 unzip SwitchyOmega_Chromium.zip -d SwitchyOmega_Chromium
 ```
 
+
+
+提高HTB访问速度，ovpn文件中加入下面这个
+
+```
+http-proxy 10.168.1.1 20809
+```
+
