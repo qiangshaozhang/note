@@ -35,3 +35,14 @@ unzip SwitchyOmega_Chromium.zip -d SwitchyOmega_Chromium
 http-proxy 10.168.1.1 20809
 ```
 
+设置全局环境变量
+
+```
+vim /etc/environment
+```
+
+```
+http_proxy="http://[代理服务器地址]:[代理服务器端口号]"
+https_proxy="https://[代理服务器地址]:[代理服务器端口号]"
+```
+
