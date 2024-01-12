@@ -163,7 +163,11 @@ ssh logan@10.10.11.242
 
 发现这个程序可以使用所有权限/usr/bin/apport-cli
 
-搜索apport时发现新爆出漏洞CVE-2023-1326
+
+
+
+
+搜索apport时发现新爆出漏洞[CVE-2023-1326-PoC](https://github.com/diego-tella/CVE-2023-1326-PoC)
 
 POC
 
@@ -177,10 +181,11 @@ sudo /usr/bin/apport-cli -c /var/crash/_usr_bin_sleep.1000.crash
 
 ![image-20231210171105864](../图片/image-20231210171105864.png)
 
-已经提权到root，查看flag 25900af2d9a5e5e8143ee8422e343c27
+已经提权到root，查看flag 
 
-![image-20231210171217416](../图片/image-20231210171217416.png)
+```
+2ce219a001e6f5c9d05d041436e00028
+```
 
-妈的哪个傻逼flag改了 
+![img](../图片/截图_2023-12-17_19-55-26.png)
 
-后补

